@@ -1,5 +1,5 @@
 import * as proto from '../protocol/admin.proto';
-import { RankChangeMsg } from '../protocol/notify.proto';
+import { BeingSurpassedMsg, NotifyCmd, RankChangeMsg } from '../protocol/notify.proto';
 import NotifyService from './notify_service';
 import RankService from './rank_service';
 
@@ -14,23 +14,48 @@ export default class AdminService {
         const { uid, score } = args;
 
         const rankService = new RankService();
-        const { rank, sumScore } = await rankService.setRankData(uid, score, true);
+        const { rank, sumScore, oldRank } = await rankService.setRankData(uid, score, true);
+        const newScore = Number(sumScore);
 
         // 通知玩家
         const msg: RankChangeMsg = {
             uid,
             rank,
-            score: Number(sumScore) || 0,
+            score: newScore || 0,
         }
-        NotifyService.inst.onNotify(uid, 'rankChange', msg);
+        NotifyService.inst.onNotify(uid, NotifyCmd.rankChange, msg);
+
+        // 超越了前100名的一些玩家
+        if (rank < 100 && rank - oldRank < 0) {
+            this.notifyBeingSurpassed(rankService, oldRank, rank, newScore)
+        }
 
         const res: proto.ReportScoreOutput = {
             uid,
             rank,
-            sumScore: Number(sumScore)
+            sumScore: newScore
         }
 
         return res;
+    }
+
+    /**通知被超越的玩家 */
+    public async notifyBeingSurpassed(rankService: RankService, oldRank: number, rank: number, tuid: number) {
+        const start = rank;
+        // 100名以外的进入前100会把原先第100名挤出去，所以要+1
+        const minIndex = oldRank > 100 ? 100 : 99;
+        const end = Math.min(100, oldRank);
+        const list = await rankService.getRankingList2(start, end);
+        list.forEach(item => {
+            const { id: uid, rank: urank, score } = item;
+            const msg: BeingSurpassedMsg = {
+                tuid,
+                trank: rank,
+                uid: Number(uid),
+                rank: urank
+            }
+            NotifyService.inst.onNotify(Number(uid), NotifyCmd.beingSurpassed, msg);
+        })
     }
 
     /**

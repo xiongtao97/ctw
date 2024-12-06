@@ -69,10 +69,12 @@ export default class RankService {
      */
     public async setRankData(uid: number, value: number, isAdd: boolean = false, expireTime: number = DAYS_7_SECONDS) {
         const redisKey = this.getRedisKey();
+        const { rank: oldRank } = await getRank(redisKey, uid);
         const score = await addRankScore(redisKey, String(uid), value, expireTime, isAdd);
         const { rank } = await getRank(redisKey, uid);
 
         return {
+            oldRank,
             rank,
             sumScore: score,
         }
