@@ -2,6 +2,8 @@ import * as http from 'http';
 import express from 'express';
 import * as bodyParser from 'body-parser';
 import * as url from 'url';
+import { HttpRequestContext } from './httpRequestContext';
+import { dispatch } from '../../route/requestRouter';
 
 const app = express();
 
@@ -84,7 +86,13 @@ function httpRouter(req: express.Request, res: express.Response) {
         }
     }
 
-    ctlName = ctlName || args.ctl || args._c || args.ctlName;
-    // TODO 后续处理
-    res.send('success!');
+    ctlName = ctlName;
+    const context = new HttpRequestContext(req, res, args);
+    dispatch(ctlName, args, context).then((result) => {
+        if (typeof result == 'object') {
+            res.json(result);
+        } else {
+            res.send(result);
+        }
+    });
 }

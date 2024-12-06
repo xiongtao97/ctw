@@ -6,6 +6,8 @@ import { getSystemConfig } from '../../index';
 
 import * as commonFun from '../../../commonFun';
 import { pubMessage, addLinstener } from '../../../redisPubAndSub';
+import { WsRequestContext } from './wsRequestContext';
+import { dispatch } from '../../route/requestRouter';
 
 export const WS_SERVER_INSTANCE_ID = commonFun.randomString(8);
 
@@ -49,13 +51,23 @@ export function start(server: http.Server) {
             const args = incomming(message);
             // 获取控制器名称
             const ctlName = args._C;
-            // TODO 路由分发
-            // 返回请求结果
-            ws.send('success');
-            const uid = uuidToUidMap.get(uuid);
-            if (!kick) {
-                recordUidToWsId(uid, WS_SERVER_INSTANCE_ID);
-            }
+
+            const context = new WsRequestContext(ws, req, args, uuid);
+            dispatch(ctlName, args, context, kick).then((result) => {
+                ws.send(JSON.stringify(result));
+                const uid = uuidToUidMap.get(uuid);
+
+                if (!kick) {
+                    recordUidToWsId(uid, WS_SERVER_INSTANCE_ID);
+                }
+            });
+
+            // // 返回请求结果
+            // ws.send('success');
+            // const uid = uuidToUidMap.get(uuid);
+            // if (!kick) {
+            //     recordUidToWsId(uid, WS_SERVER_INSTANCE_ID);
+            // }
         });
         ws.on('close', () => {
             const uid = uuidToUidMap.get(uuid);

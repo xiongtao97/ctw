@@ -1,6 +1,12 @@
 import * as Redis from 'ioredis';
 import * as service from './service';
 import * as redisPubAndSub from '../redisPubAndSub';
+import { BaseController } from './abstract/baseController';
+import { BaseRequestContext } from './abstract/baseRequestContext';
+import { TaskQueue } from './util/taskQueue';
+import { registerContrller } from './route/requestRouter';
+import { WsRequestContext } from './service/ws/wsRequestContext';
+import { HttpRequestContext } from './service/http/httpRequestContext';
 
 let systemConfig: {
     // 游戏ID
@@ -39,4 +45,11 @@ function getSystemConfig() {
 export {
     init,
     getSystemConfig,
-}
+    BaseController,
+    BaseRequestContext,
+    TaskQueue,
+    registerContrller,
+    WsRequestContext,
+    HttpRequestContext,
+    redisPubAndSub,
+};
