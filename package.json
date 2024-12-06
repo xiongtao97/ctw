@@ -1,9 +1,24 @@
 {
+  "name": "ctw",
+  "version": "1.0.0",
+  "description": "途未面试 - 游戏排行榜系统",
+  "main": "index.js",
   "dependencies": {
+    "body-parser": "^1.20.3",
     "express": "^4.21.2",
     "ioredis": "^5.4.1",
     "joi": "^17.13.3",
     "log4js": "^6.9.1",
     "ws": "^8.18.0"
-  }
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/ioredis": "^4.28.10",
+    "@types/ws": "^8.5.13"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "xiongtao",
+  "license": "ISC"
 }
