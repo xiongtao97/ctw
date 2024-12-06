@@ -1,4 +1,6 @@
 import * as proto from '../protocol/admin.proto';
+import { RankChangeMsg } from '../protocol/notify.proto';
+import NotifyService from './notify_service';
 import RankService from './rank_service';
 
 export default class AdminService {
@@ -13,6 +15,14 @@ export default class AdminService {
 
         const rankService = new RankService();
         const { rank, sumScore } = await rankService.setRankData(uid, score, true);
+
+        // 通知玩家
+        const msg: RankChangeMsg = {
+            uid,
+            rank,
+            score: Number(sumScore) || 0,
+        }
+        NotifyService.inst.onNotify(uid, 'rankChange', msg);
 
         const res: proto.ReportScoreOutput = {
             uid,

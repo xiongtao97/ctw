@@ -7,6 +7,7 @@ import { TaskQueue } from './util/taskQueue';
 import { registerContrller } from './route/requestRouter';
 import { WsRequestContext } from './service/ws/wsRequestContext';
 import { HttpRequestContext } from './service/http/httpRequestContext';
+import * as wsService from './service/ws/wsService';
 
 let systemConfig: {
     // 游戏ID
@@ -52,4 +53,5 @@ export {
     WsRequestContext,
     HttpRequestContext,
     redisPubAndSub,
+    wsService,
 };

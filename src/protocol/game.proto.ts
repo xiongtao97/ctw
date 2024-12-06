@@ -52,6 +52,8 @@ export interface AliveOutput extends UserOutput {
 }
 
 export interface ReconnectInput extends UserInput {
+    /**本服务token */
+    gameToken?: string
 }
 export interface ReconnectOutput extends UserOutput {
     /** 服务器时间ms 前端时间校对 */

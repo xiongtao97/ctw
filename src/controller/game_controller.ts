@@ -3,6 +3,7 @@ import * as proto from '../protocol/game.proto';
 import Joi from 'joi';
 import { paramsVerify } from '../commonFun';
 import GameService from '../service/game_service';
+import NotifyService from '../service/notify_service';
 
 @registerContrller('game')
 export default class GameCtrProxy extends BaseController implements proto.IGameController {
@@ -23,6 +24,9 @@ export default class GameCtrProxy extends BaseController implements proto.IGameC
         // { "_C": "game", "cmd": "enter" }
         const gameService = new GameService();
         const res = await gameService.enter(param);
+
+        // 绑定ws链接
+        NotifyService.inst.register(this, res.uid);
         return res;
     }
 
@@ -37,10 +41,11 @@ export default class GameCtrProxy extends BaseController implements proto.IGameC
 
     async reconnect(input: proto.ReconnectInput): Promise<proto.ReconnectOutput> {
         const { uid, param, error } = paramsVerify(input, {
-            token: Joi.string(),
+            gameToken: Joi.string(),
         });
         if (error) return { error };
         // TODO 逻辑
+        NotifyService.inst.register(this, uid);
         return { time: Date.now() }
     }
 }
