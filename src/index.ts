@@ -35,7 +35,8 @@ async function main() {
         4200,
         baseConfig.gameId,
         redis,
-        baseConfig.redis
+        baseConfig.redis,
+        baseConfig.log4js,
     );
 
 

@@ -1,6 +1,7 @@
 import { Redis } from 'ioredis';
 import baseConfig from '../config/baseConfig';
 import { getValueByScore, getScoreByValue, getStampByValue, getCurrentTimestamp } from '../commonFun';
+import { Logger } from './logger';
 
 const redis = new Redis(baseConfig.redis);
 
@@ -116,7 +117,7 @@ export async function addRankScore(
     pipeline.zadd(rankKey, value, id);
     if (expire) pipeline.expire(rankKey, expire);
     await pipeline.exec().catch((error) => {
-        console.error(`addRankScore ${rankKey}, ${id}, ${value}`);
+        Logger.getErrorLog().error(`addRankScore ${rankKey}, ${id}, ${value}`);
     })
     return score
 }

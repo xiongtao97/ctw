@@ -3,6 +3,7 @@ import { TaskQueue } from '../util/taskQueue';
 import { BaseRequestContext } from '../abstract/baseRequestContext';
 import { BaseController } from '../abstract/baseController';
 import { createRequestContext } from '../hook/hook';
+import { logger } from '..';
 
 const controllerConfigs: { [id: string]: ControllerConfig } = {};
 const queues: {
@@ -124,8 +125,7 @@ export async function dispatch(
     }
     const deltaTime = Date.now() - startTime;
     
-    // TODO 替换成log4js
-    console.log({
+    logger.debug({
         type: 'requestResult',
         ctlName: controllerName,
         cmd: args.cmd,
@@ -173,7 +173,7 @@ async function getRequestResult(
         if (error) {
             // @ts-ignore
             if (error && error['stack']) {
-                console.error({type: 'getProxyIdError', error })
+                logger.error({type: 'getProxyIdError', error })
                 result = { error: errorInfo.system_err };
             } else {
                 result = { error };
@@ -228,7 +228,7 @@ async function processRequest(controller: BaseController, args: any) {
     } catch (error) {
         // @ts-ignore
         if (error && error['stack']) {
-            console.error({
+            logger.error({
                 type: 'processRequestError',
                 error,
             });

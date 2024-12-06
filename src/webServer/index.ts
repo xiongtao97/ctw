@@ -8,6 +8,8 @@ import { registerContrller } from './route/requestRouter';
 import { WsRequestContext } from './service/ws/wsRequestContext';
 import { HttpRequestContext } from './service/http/httpRequestContext';
 import * as wsService from './service/ws/wsService';
+import * as logger from './logger/log';
+import { Configuration } from 'log4js';
 
 let systemConfig: {
     // 游戏ID
@@ -28,9 +30,14 @@ function init(
     gameId: number,
     cacheRedis: Redis.Redis,
     pubRedisConfig: Redis.RedisOptions,
+    logConfig: Configuration,
 ) {
     systemConfig = { cacheRedis, gameId };
 
+    // 初始化log4js
+    logger.initLog(logConfig);
+
+    // 初始化redis消息发布订阅系统
     if (pubRedisConfig) {
         redisPubAndSub.init(pubRedisConfig);
     }
@@ -54,4 +61,5 @@ export {
     HttpRequestContext,
     redisPubAndSub,
     wsService,
+    logger,
 };

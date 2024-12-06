@@ -1,6 +1,8 @@
 import baseConfig from '../config/baseConfig';
 import { wsService, BaseController, WsRequestContext } from '../webServer';
+import { Logger } from './logger';
 
+const logger = Logger.getServerLog()
 export default class NotifyService {
     private static _instance: NotifyService;
 
@@ -15,11 +17,11 @@ export default class NotifyService {
     public onNotify(uid: number, cmd: string | Function, msg: any) {
         msg.cmd = cmd;
         if (baseConfig.isDev) {
-            console.log({ type: 'wsPush', msg: JSON.stringify(msg) });
+            logger.debug({ type: 'wsPush', msg: JSON.stringify(msg) });
         }
 
         wsService.sendMsgToUserByUid(uid, msg).catch((err: Error) => {
-            console.error(`notify error. uid:${uid} msg:${err.message}`);
+            logger.error(`notify error. uid:${uid} msg:${err.message}`);
         });
     }
 

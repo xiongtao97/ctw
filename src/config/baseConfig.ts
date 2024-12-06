@@ -1,5 +1,6 @@
 import { RedisOptions } from 'ioredis';
 import DevEnvConfig from './env/development';
+import { Configuration } from 'log4js';
 
 export const enum ENVS_TYPE {
     //本地开发测试环境
@@ -17,6 +18,8 @@ export interface IEnvConfig {
     env: string;
     /**是否是测试环境*/
     isDev: boolean;
+    /**log4js配置 */
+    log4js: Configuration;
 }
 
 const env = process.env.PROJECT_ENV || ENVS_TYPE.DEVELOPMENT;
