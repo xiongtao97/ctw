@@ -142,7 +142,7 @@ export async function getRankList(
         const item: IRankItem = {
             id,
             score,
-            rank: i / 2 + 1,
+            rank: i / 2 + 1 + start,
         };
         if (withStamp) {
             item.stamp = getStampByValue(value);

@@ -23,4 +23,29 @@ export default class AdminService {
         return res;
     }
 
+    /**
+     * 获取指定玩家排名
+     * @param uid 
+     */
+    public async getRankByUid(uid: number) {
+        const rankService = new RankService();
+        const { rank, score } =  await rankService.getSelfRanking(uid);
+
+        return {
+            uid,
+            rank,
+            score,
+        }
+    }
+
+    /**
+     * 分页查询排行榜信息
+     */
+    public async getRankList(pageNum: number, pageCount: number) {
+        const rankService = new RankService();
+        const list = await rankService.getRankingList(pageNum, pageCount, Number.MAX_VALUE);
+
+        return list;
+    }
+
 }
