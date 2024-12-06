@@ -53,7 +53,7 @@ const RANK_SUFFIX = 10 ** 9; //五十年
 
 /** 根据分数计算将要存储到redis的值 */
 export function getValueByScore(score: number, endTime: number = RANK_END_TIME) {
-    const timeDiff = endTime - getCurrentTimestamp();
+    const timeDiff = getCurrentTimestamp() - endTime;
     const result = Math.floor(score * RANK_SUFFIX + (timeDiff % RANK_SUFFIX));
 
     return result;
