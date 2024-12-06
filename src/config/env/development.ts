@@ -8,6 +8,7 @@ export default class DevEnvConfig implements IEnvConfig {
     env: string;
     isDev: boolean;
     log4js: Configuration;
+    port: number = 4200;
 
     constructor(env: ENVS_TYPE) {
         this.gameId = 111;

@@ -20,6 +20,8 @@ export interface IEnvConfig {
     isDev: boolean;
     /**log4js配置 */
     log4js: Configuration;
+    /**web监听端口 */
+    port: number
 }
 
 const env = process.env.PROJECT_ENV || ENVS_TYPE.DEVELOPMENT;

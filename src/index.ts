@@ -32,7 +32,7 @@ async function main() {
     });
 
     webServer.init(
-        4200,
+        baseConfig.port,
         baseConfig.gameId,
         redis,
         baseConfig.redis,
