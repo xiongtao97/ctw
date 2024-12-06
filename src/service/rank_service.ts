@@ -9,7 +9,7 @@ const DAYS_7_SECONDS = 7 * 24 * 60 * 60;
 export interface IRankItem {
     /**排名 */
     rank: number;
-    /**排名键值,玩家排名时为zuid */
+    /**排名键值,玩家排名时为uid */
     id: string;
     /**分数 */
     score: number;
@@ -38,6 +38,13 @@ export default class RankService {
         if (start > total) return [];
         const redisKey = this.getRedisKey();
         const result = await getRankList(redisKey, start - 1, end - 1, withStamp, ORDER_TYPE.desc);
+        return result;
+    }
+
+    /**获取指定范围的排行榜信息 */
+    public async getRankingList2(start: number, end: number, withStamp: number = null) {
+        const redisKey = this.getRedisKey();
+        const result = await getRankList(redisKey, start, end, withStamp, ORDER_TYPE.desc);
         return result;
     }
 

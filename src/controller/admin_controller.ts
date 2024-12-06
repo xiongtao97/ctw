@@ -13,6 +13,16 @@ export default class AdminCtrProxy extends BaseController implements proto.IAdmi
         this._adminService = new AdminService();
     }
 
+    async getNearRankList(input: proto.GetNearRankListInput): Promise<proto.GetNearRankListOutput> {
+        let { uid, error } = paramsVerify(input, {});
+        if (error) return { error };
+
+        const list = await this._adminService.getNearRankList(uid);
+        return {
+            list
+        }
+    }
+
     async getRankList(input: proto.GetRankListInput): Promise<proto.GetRankListOutput> {
         let { param, error } = paramsVerify(input, {
             pageNum: Joi.number().positive().required(),

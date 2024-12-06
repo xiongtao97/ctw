@@ -48,4 +48,23 @@ export default class AdminService {
         return list;
     }
 
+    /**
+     * 查询指定玩家上下10名的排行榜数据
+     * @param uid 
+     * @param near 
+     */
+    public async getNearRankList(uid: number, near: number = 2) {
+        const rankService = new RankService();
+
+        // 先获取该玩家排名
+        let { rank } =  await rankService.getSelfRanking(uid);
+        // 要的是下标
+        rank -= 1;
+        // 再计算获取范围
+        const start = Math.max(0, rank - near);
+        const end = rank + near;
+        const list = await rankService.getRankingList2(start, end);
+        return list;
+    }
+
 }

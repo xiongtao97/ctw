@@ -10,6 +10,17 @@ export interface IAdminController {
 
     /**分页查询排行榜数据 */
     getRankList(input: GetRankListInput): Promise<GetRankListOutput>
+
+    /**查询指定玩家附近排名（上下前10） */
+    getNearRankList(input: GetNearRankListInput): Promise<GetNearRankListOutput>
+}
+
+export interface GetNearRankListInput extends UserInput {
+    uid: number
+}
+export interface GetNearRankListOutput extends UserOutput  {
+    /**排行榜列表 */
+    list?: IRankItem[]
 }
 
 export interface GetRankListInput extends UserInput {
